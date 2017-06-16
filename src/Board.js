@@ -79,15 +79,43 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      // create a count variable and initilize it to be 0
+      var count = 0;
+      // get the array based on the input rowIndex
+      var arr = this.get(rowIndex);
+
+      // for each value in the array
+      for (var i = 0; i < arr.length; i++) {
+        // if the value is equal to 1
+        count += arr[i];
+          // increase the count variable by 1
+      }
+      // after the loop, if the count variable is greater than 1
+      if (count > 1) {
+        return true;
+      } else {
+        return false;
+      }
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
+      // now we check ALL the rows of our board
+      // our board is stored at the this.rows() variable
+      var boardArr = this.rows();
+      // iterate through the rows
+         // for each row call the hasRowConflictAt(indexOfTheRow)
+      for (var i = 0; i < boardArr.length; i++) {
+       // if it finds any row conflict
+        // return true
+        if (this.hasRowConflictAt(i)) {
+          return true;
+        }
+      }
+      // else
+        // false
       return false; // fixme
     },
-
-
 
     // COLUMNS - run from top to bottom
     // --------------------------------------------------------------
