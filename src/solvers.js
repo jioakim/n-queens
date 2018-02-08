@@ -17,26 +17,37 @@
 
 window.findNRooksSolution = function(n) {
   var solution;
-  var board = new Board({n: n});
 
-  var count = 0;
-  for (var i = 0; i < n; i++) {
-    if (solution) {
-      break;
-    }
-    for (var j = 0; j < n; j++) {
-      board.togglePiece(i, j);
+  // given a board and a row index
+  var findSolution = function(board, rowIndex) {
+    // for each column index
+    for (var i = 0; i < n; i++) {
+      // put a rook on that row/column index
+      board.togglePiece(rowIndex, i);
+      // if updated board does contain conflict
       if (board.hasAnyRooksConflicts()) {
-        board.togglePiece(i, j);
+        // remove the rook and go to next column index
+        board.togglePiece(rowIndex, i);
+      // if updated board doesn't contain conflict
       } else {
-        count += 1;
-        if (count === n) {
+        // if row index the current rook is n-1
+        if (rowIndex === (n-1)) {
+          // set solution to be updated board
           solution = board.rows();
-          break;
+          // exit
+          return;
+        // otherwise
+        } else {
+          // re-call recursive function by passing in updated board and next row index
+          findSolution(board, rowIndex+1);
         }
       }
     }
-  }
+  };
+
+  // initiate recursive function call by passing in a new board and first row index of 0
+  var boardObj = new Board({n: n});
+  findSolution(boardObj, 0);
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
@@ -62,34 +73,46 @@ window.countNRooksSolutions = function(n) {
   // pattern: recursive(n) = n * recursive(n-1)
   // base case: recursive(2) = 2. Given recursive(2) = 2 * recurisve(1), implied that recurisve(1) = 1
   // base case: recursive(1) = 1. Given recursive(1) = 1 * recurisve(0), implied that recurisve(0) = 1
-};
+
+ };
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined;
+  var solution;
+  var keep = 0;
 
-  var board = new Board({n: n});
+  // given a board and a row index
+  var findSolution = function(board, rowIndex) {
+    // for each column index
 
-  var count = 0;
-  for (var i = 0; i < n; i++) {
-    if (solution) {
-      break;
-    }
-    for (var j = 0; j < n; j++) {
-      board.togglePiece(i, j);
+    for (var i = 0; i < n - keep; i++) {
+      // put a rook on that row/column index
+      board.togglePiece(rowIndex, keep + i);
+      console.log(board.rows());
+      // if updated board does contain conflict
       if (board.hasAnyQueensConflicts()) {
-        board.togglePiece(i, j);
+        // remove the rook and go to next column index
+        board.togglePiece(rowIndex, keep + i);
+      // if updated board doesn't contain conflict
       } else {
-        count += 1;
-        console.log(board.rows());
-        if (count === n) {
+        // if row index the current rook is n-1
+        if (rowIndex === (n-1)) {
+          // set solution to be updated board
           solution = board.rows();
-          break;
+          // exit
+          return;
+        // otherwise
+        } else {
+          // re-call recursive function by passing in updated board and next row index
+          findSolution(board, rowIndex+1);
         }
       }
     }
-  }
+  };
 
+  // initiate recursive function call by passing in a new board and first row index of 0
+  var boardObj = new Board({n: n});
+  findSolution(boardObj, 0);
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
